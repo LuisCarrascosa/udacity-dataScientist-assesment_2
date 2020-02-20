@@ -8,6 +8,7 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
 from sqlalchemy import create_engine
+from joblib import dump, load
 from sklearn.model_selection import train_test_split, GridSearchCV
 
 import sys
@@ -36,7 +37,7 @@ def load_data(database_filepath):
 def tokenize(text):
     # get list of all urls using regex
     detected_urls = re.findall(url_regex, text)
-    
+
     # replace each url in text string with placeholder
     for url in detected_urls:
         text = text.replace(url, 'urlplaceholder')
@@ -47,7 +48,10 @@ def tokenize(text):
     lemmatizer = WordNetLemmatizer()
 
     # iterate through each token
-    clean_tokens = [lemmatizer.lemmatize(word) for word in tokens if word not in stop_words]  
+    clean_tokens = [
+        lemmatizer.lemmatize(word)
+        for word in tokens if word not in stop_words
+        ]
 
     return clean_tokens
 
@@ -83,7 +87,7 @@ def evaluate_model(model, X_test, Y_test, category_names):
 
     for col in category_names:
         i_related = category_names.get_loc(col)
-        
+
         print(f"Column: {col}")
         print(classification_report(
             np.array(Y_test[col]),
@@ -92,7 +96,11 @@ def evaluate_model(model, X_test, Y_test, category_names):
 
 
 def save_model(model, model_filepath):
-    pass
+    dump(model, model_filepath)
+
+
+def load_model(model_filepath):
+    return load(model_filepath)
 
 
 def main():
@@ -100,14 +108,18 @@ def main():
         database_filepath, model_filepath = sys.argv[1:]
         print('Loading data...\n    DATABASE: {}'.format(database_filepath))
         X, Y, category_names = load_data(database_filepath)
-        X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2)
-        
+
+        X_train, X_test, Y_train, Y_test = train_test_split(
+            X,
+            Y,
+            test_size=0.2)
+
         print('Building model...')
         model = build_model()
-        
+
         print('Training model...')
         model.fit(X_train, Y_train)
-        
+
         print('Evaluating model...')
         evaluate_model(model, X_test, Y_test, category_names)
 
@@ -117,10 +129,10 @@ def main():
         print('Trained model saved!')
 
     else:
-        print('Please provide the filepath of the disaster messages database '\
-              'as the first argument and the filepath of the pickle file to '\
-              'save the model to as the second argument. \n\nExample: python '\
-              'train_classifier.py ../data/DisasterResponse.db classifier.pkl')
+        print('Please provide the filepath of the disaster messages database \
+              as the first argument and the filepath of the pickle file to \
+              save the model to as the second argument. \n\nExample: python \
+              train_classifier.py ../data/DisasterResponse.db classifier.pkl')
 
 
 if __name__ == '__main__':

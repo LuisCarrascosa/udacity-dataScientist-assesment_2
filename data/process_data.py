@@ -1,11 +1,20 @@
 # Revised with flake8
 import sys
-
 import pandas as pd
 from sqlalchemy import create_engine
 
 
 def load_data(messages_filepath, categories_filepath):
+    """
+    Description: This function loads the data.
+
+    Arguments:
+        messages_filepath: path of "disaster_messages.csv" dataset.
+        categories_filepath: path of "disaster_categories.csv" dataset.
+
+    Returns:
+        Dataframe object with both datasets merged
+    """
     messages = pd.read_csv(messages_filepath, sep=',', index_col='id')
     categories = pd.read_csv(categories_filepath, sep=',', index_col='id')
 
@@ -36,6 +45,15 @@ def load_data(messages_filepath, categories_filepath):
 
 
 def clean_data(df):
+    """
+    Description: This function cleans the data.
+
+    Arguments:
+        df: Dataframe to clean.
+
+    Returns:
+        Dataframe cleaned
+    """
     # Generate dummy cols for categorical variable
     df = pd.concat([df, pd.get_dummies(df['genre'], dummy_na=False)], axis=1)
     df.drop(['genre'], axis=1, inplace=True)
@@ -59,6 +77,16 @@ def clean_data(df):
 
 
 def save_data(df, database_filename):
+    """
+    Description: This function saves the data.
+
+    Arguments:
+        df: Dataframe to save.
+        database_filename: path of database file.
+
+    Returns:
+        None
+    """
     engine = create_engine(f'sqlite:///{database_filename}')
     df.to_sql(
         'messages_processed',
@@ -69,6 +97,17 @@ def save_data(df, database_filename):
 
 
 def main():
+    """
+    Description: Main function.
+
+    Mandatory arguments:
+        messages_filepath: path of "disaster_messages.csv" dataset.
+        categories_filepath: path of "disaster_categories.csv" dataset.
+        database_filename: path of database file.
+
+    Returns:
+        None
+    """
     if len(sys.argv) == 4:
 
         messages_filepath, categories_filepath, database_filepath = \

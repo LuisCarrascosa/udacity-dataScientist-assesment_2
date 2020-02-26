@@ -29,3 +29,7 @@ We merge both datasets and create columns for all categories. Drop duplicates an
 Then we save the data with SQLAlchemy.
 
 #### ML pipeline:
+1. Building model
+2. Training model. Uses GridSearchCV to hyperparameters search of CountVectorizer and TfidfTransformer. Uses a RandomForestClassifier as classificator. GridSearchCV use recall_score on recall because the data is very unbalanced
+3. Saving model
+4. Evaluating model

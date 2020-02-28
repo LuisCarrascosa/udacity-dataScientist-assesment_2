@@ -47,7 +47,7 @@ def load_data(database_filepath):
 
 def tokenize(text):
     """
-    Description: This function process text. Replaces urls, applies lower, 
+    Description: This function process text. Replaces urls, applies lower,
     tokenize, lemmatizer and removes stop words.
 
     Arguments:
@@ -115,13 +115,16 @@ def build_model():
         'tfidf__use_idf': (True, False),
         #   'clf__estimator__n_estimators': [200],
         # 'clf__estimator__min_samples_split': [4],
+        'clf__estimator__max_depth': [10],
+        'clf__estimator__n_jobs': [-1],
         'clf__estimator__class_weight': ['balanced']
     }
 
     cv = GridSearchCV(
         estimator=pipeline,
         scoring=make_scorer(recall_score, average='micro'),
-        param_grid=parameters
+        param_grid=parameters,
+        verbose=10
     )
 
     return cv

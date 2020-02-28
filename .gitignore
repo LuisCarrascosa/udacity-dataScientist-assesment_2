@@ -127,3 +127,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# ML models (Github doesn´t want files greater than 100Mb)
+*.pkl

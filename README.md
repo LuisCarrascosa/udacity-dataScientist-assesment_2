@@ -15,6 +15,10 @@
 
 
 ### Summary:
+#### Libraries version:
+With "version.py" it's possible to generate a file "versions.txt" that contains all libraries versions used.
+"versions_submitted,txt" has the versions used to test the project.
+
 #### ETL pipeline:
 We use two datasets with tweets messages categorized:
 * disaster_messages.csv

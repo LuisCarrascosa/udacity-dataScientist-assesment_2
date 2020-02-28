@@ -86,7 +86,7 @@ def index():
             {
                 'data': [
                     Bar(
-                        x=col,
+                        x=[0, 1],
                         y=df.groupby(col).count()['message']
                     )
                 ],
